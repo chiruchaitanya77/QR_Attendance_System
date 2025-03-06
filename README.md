@@ -45,16 +45,7 @@ Before running the project, create credentials and service accounts by logging i
 
 ---
 
-## 📷 Screenshots
-
-### Management Dashboard
-*Insert image here*
-
-### Student Dashboard
-*Insert image here*
-
-### QR Code Scanner
-*Insert image here*
+## 📷 Some Screenshots
 
 <img width="500px" alt="Image" src="https://github.com/user-attachments/assets/6bf2ed8f-56a4-4352-9858-031621c7251a" />
 <img width="500px" alt="Image" src="https://github.com/user-attachments/assets/774afd71-42d8-429c-908b-b468fb20d847" />
