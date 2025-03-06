@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School ID Card</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f3f3f3;
+            margin: 0;
+        }
+        nav {
+            background-color: lightskyblue;
+            top: 0;
+            position: fixed;
+            width: 100%;
+            overflow: visible;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            /*height: 8vh;*/
+            display: flex;
+            justify-content: right;
+        }
+        nav ul li {
+            margin: 0;
+        }
+        nav ul li a {
+            display: block;
+            color: #000080;
+            text-decoration: none;
+            padding: 14px 20px 18px;
+            text-align: center;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color:rgba(70,80,241,.6);
+        }
+        nav ul p {
+            color: #000080;
+            font-size: 25px;
+            font-style: oblique;
+            font-weight: 600;
+            margin: 10px 0 0 2vw;
+        }
+        .prev-dow {
+            display: flex;
+            gap: 10px;
+            flex-direction: row;
+                }
+        .name-blood-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 5px;
+            position: relative;
+        }
+        .student-name {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: orangered;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        .blood-group {
+            font-size: 20px;
+            font-weight: bold;
+            color: red;
+            margin-right: 10px;
+        }
+        .scl-img {
+            display: flex;
+            align-items: center; /* Vertically aligns the items */
+            justify-content: center;
+            margin: -4% 40% -8% 0 ;
+            gap: 60px;
+        }
+
+        #details {
+            margin-top: -5%;
+        }
+
+        .id-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .id-card-front, .id-card-back {
+            width: 300px;
+            height: 420px;
+            background-image:
+            linear-gradient(to bottom, rgba(144, 238, 144, 0.3) 5%, rgba(144, 238, 144, 0) 40%),
+            linear-gradient(to top, rgba(144, 238, 144, 0.5) 5%, rgba(144, 238, 144, 0) 40%),
+            url("/static/assets/idbg.jpeg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            position: absolute;
+            left: -9999px;
+        }
+        h3, p, img {
+            margin: 0;
+        }
+        .download-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .preview-container {
+            gap: 10px;
+        }
+        .preview-img {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+            height: 420px;
+            object-fit: contain;
+        }
+        footer {
+            text-align: center;
+            background-color: lightskyblue;
+            color: black;
+            position: fixed;
+            bottom:0;
+            padding: 10px;
+            width: 100vw;
+    }
+    </style>
+</head>
+<body onload="previewID()">
+<nav>
+    <ul>
+        <p>User Dashboard</p>
+        <div style="display: flex; margin-left: auto;">
+            <li><a href="/userhome">Dashboard</a></li>
+            <li><a href="/">Log Out</a></li>
+        </div>
+    </ul>
+</nav>
+<div class="prev-dow">
+    <div class="id-container">
+        <div id="front" class="id-card-front">
+            {% if studentdetails %}
+                <div class="scl-img">
+                    <img src="/static/assets/SCET.png"
+                        style="width: 50px; height: 50px; border-radius: 10%; margin-bottom: 10px; " alt="School Logo">
+                    <h3 style="font-size: 20px; margin-bottom: 10px;"><strong>{{ studentdetails.college }}</strong></h3>
+                </div>
+                <h3 style="margin-bottom: 10px; font-size: 20px;"><strong>Student ID Card</strong></h3>
+                <img src="/static/assets/HeroImg.jpeg" id="stu-img"
+                     style="width: 120px; height: 120px; border-radius: 10%; border: 2px solid black;  margin-top: -3%" alt="Student Profile Pic"> <!--src="https://picsum.photos/104/104"-->
+                <div class="name-blood-container">
+                    <strong class="student-name">{{ studentdetails.studentname }}</strong>
+                    <span class="blood-group"> {{ studentdetails.blood }}&#129656;</span>
+                </div>
+                <p><strong>Regd. No.: </strong>{{ studentdetails.roll }}</p>
+                <p id="details"><strong>Email: </strong>{{ studentdetails.email }}</p>
+                <p id="details"><strong>Cell: </strong>{{ studentdetails.mobile }}</p>
+                <p id="details"><strong>Date of Birth: </strong>{{ studentdetails.dob }}</p>
+                <p style="line-height: 1.2;"><strong>Address: </strong>{{ studentdetails.address }}</p>
+            {% endif %}
+        </div>
+        <div id="back" class="id-card-back">
+            {% if studentdetails %}
+                <h3 style="font-size: 20px; margin-bottom: 10px;"><strong>{{ studentdetails.college }}</strong></h3>
+                <p><strong>Address:</strong></p>
+                <p>SEETHARAMPURAM, NARSAPUR -  &nbsp;&nbsp;&nbsp; 534 280., W.G.Dist., A.P.</p>
+                <p><strong>Phone:</strong> +91-6300497377</p>
+                <p><strong>Email:</strong> {{ studentdetails.college }}@gmail.com</p>
+                <img src="/media/qrcodes/{{ studentdetails.studentname }}_{{ studentdetails.roll }}.png"
+                     style="width: 70%; height: 45%;" alt="Unique QR Code">
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="preview-container" id="preview-container">
+        <img id="preview-front" class="preview-img" alt="ID-front" src="">
+        <img id="preview-back" class="preview-img" alt="ID-back" src="">
+    </div>
+</div>
+
+<button class="download-btn" onclick="downloadID()">Download ID Card</button>
+<div id="width-img"></div>
+<div id="height-img"></div>
+<footer>&copy; 2025 QR-Code Attendance System &commat;<p style="display: inline-block; color: mediumblue">Chiru Chaitanya</p>. All Rights Reserved.</footer>
+
+    <script>
+        function previewID() {
+        let frontDiv = document.getElementById("front");
+        let backDiv = document.getElementById("back");
+        let previewContainer = document.getElementById("preview-container");
+
+        // Capture the front card
+        html2canvas(frontDiv, { scale: 3, useCORS: true, allowTaint: false, logging: true }).then(canvas => {
+            let frontPreview = document.getElementById("preview-front");
+            frontPreview.src = canvas.toDataURL("image/png");
+        });
+
+        // Capture the back card
+        html2canvas(backDiv, { scale: 3, allowTaint: false, logging: true }).then(canvas => {
+            let backPreview = document.getElementById("preview-back");
+            backPreview.src = canvas.toDataURL("image/png");
+        });
+
+        // Ensure the preview container is displayed
+        previewContainer.style.display = "flex";
+        previewContainer.style.flexDirection="row"
+    }
+
+    function downloadID() {
+        let frontDiv = document.getElementById("front");
+        let backDiv = document.getElementById("back");
+
+        // Download the front card
+        html2canvas(frontDiv, { scale: 2, useCORS: true, allowTaint: false, logging: true }).then(canvas => {
+            let link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = "ID_Card_Front.png";
+            link.click();
+        });
+
+        // Download the back card
+        html2canvas(backDiv, { scale: 2, allowTaint: false, logging: true }).then(canvas => {
+            let link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = "ID_Card_Back.png";
+            link.click();
+        });
+    }
+    </script>
+</body>
+</html>

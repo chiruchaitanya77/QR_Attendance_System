@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School ID Card</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f3f3f3;
+        }
+        .name-blood-container {
+            display: flex;
+            align-items: center; /* Vertically aligns the items */
+            justify-content: center;
+            gap: 60px; /* Adds space between the name and blood group */
+            margin-left: 35%;
+        }
+
+        .student-name {
+            font-size: 36px;
+            color: orangered;
+            margin-bottom: 3%;
+            font-weight: bold;
+        }
+
+        .blood-group {
+            font-size: 24px;
+            color: #333;
+        }
+        .id-container {
+            display: flex;
+            gap: 20px;
+        }
+        .id-card-front {
+            width: 300px;
+            height: 420px;
+            background-image: url("/static/assets/idbg.jpeg");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+
+            & p {
+                margin: 3% 0 3% 0;
+                font-size: 18px;
+                color: #333;
+            }
+
+            & img {
+                width: 100px;
+                height: 100px;
+            }
+        }
+        .id-card-back {
+            width: 300px;
+            height:  420px;
+            background-image: url("/static/assets/idbg.jpeg");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+
+            & p {
+                margin: 3% 0 3% 0;
+                font-size: 18px;
+            }
+
+            & img {
+                width: 100px;
+                height: 100px;
+            }
+        }
+        .download-btn {
+            margin-top: 40px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="id-container">
+        <!-- Front of ID Card -->
+        <div id="front" class="id-card-front">
+        {% if studentdetails %}
+            <h3 style="font-size: 24px; margin-top: -2%; margin-bottom: 5%">{{ studentdetails.college }}</h3>
+            <h3 style="margin-top: -2%; font-size: 24px;">Student ID Card</h3>
+            <img src="https://picsum.photos/104/104"
+                 style="width: 150px; height: 150px; border-radius: 10%; border: 2px solid black"
+                 alt="Student Photo">
+            <div class="name-blood-container">
+                <strong class="student-name">{{ studentdetails.studentname }}</strong>
+                <span class="blood-group">&#129656; {{ studentdetails.blood }}</span>
+            </div>
+            <p><strong>Regd. No.: </strong>{{ studentdetails.roll }}</p>
+            <p><strong>Email: </strong>{{ studentdetails.email }}</p>
+            <p><strong>Class: </strong>{{ studentdetails.classes }}</p>
+            <p><strong>Cell: </strong>{{ studentdetails.mobile }}</p>
+        {% endif %}
+        </div>
+
+        <!-- Back of ID Card -->
+        <div id="back" class="id-card-back">
+        {% if studentdetails %}
+            <h3 style="margin-top: -2%; font-size: 24px">{{ studentdetails.college }}</h3>
+            <p><strong>Address:</strong></p>
+            <p>SEETHARAMPURAM, NARSAPUR - 534 280., W.G.Dist., A.P.</p>
+            <p><strong>Phone:</strong> +91-6300497377</p>
+            <p><strong>Email:</strong> {{ studentdetails.college }}@gmail.com</p>
+        {% endif %}
+        {% if studentdetails %}
+            <img src="/media/qrcodes/{{ studentdetails.studentname }}_QR.png"
+                 style="width: 86%; height: 55%; margin-top: 5%"
+                 alt="Student QR Code">
+        {% endif %}
+        </div>
+    </div>
+
+    <button class="download-btn" onclick="downloadID()">Download ID Card</button>
+
+    <script>
+        function downloadID() {
+            let frontDiv = document.getElementById("front");
+            let backDiv = document.getElementById("back");
+
+            html2canvas(frontDiv).then(canvas => {
+                let link = document.createElement("a");
+                link.href = canvas.toDataURL("image/png");
+                link.download = "ID_Card_Front.png";
+                link.click();
+            });
+
+            html2canvas(backDiv).then(canvas => {
+                let link = document.createElement("a");
+                link.href = canvas.toDataURL("image/png");
+                link.download = "ID_Card_Back.png";
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>
+
+{#<img src="{{ MEDIA_URL }}qrcodes/{{ student.studentname }}_QR.png" alt="Student QR Code">#}
