@@ -10,13 +10,19 @@ Before running the project, create credentials and service accounts by logging i
 ---
 
 ## ✨ Key Features
-✅ **Automated Attendance Marking** – Students scan their QR codes to register attendance instantly.
-✅ **Secure and Unique Identification** – Each student receives a unique QR code, preventing proxy attendance.
-✅ **Real-Time Tracking & Reporting** – Administrators and teachers can monitor attendance records in real time.
-✅ **Integration with School Management System** – Easily integrates with existing student databases for seamless operation.
-✅ **Cloud-Based Storage** – Attendance data is securely stored in the cloud, ensuring reliability, backup, and easy access from any device.
-✅ **User-Friendly Interface** – The system offers a simple and intuitive UI, making it easy for students and administrators to manage attendance records.
-✅ **Secure Logins** – Management and student accounts are secured with authentication.
+✅ Automated Attendance Marking – Students scan their QR codes to register attendance instantly.
+
+✅ Secure and Unique Identification – Each student receives a unique QR code, preventing proxy attendance.
+
+✅ Real-Time Tracking & Reporting – Administrators and teachers can monitor attendance records in real time.
+
+✅ Integration with School Management System – Easily integrates with existing student databases for seamless operation.
+
+✅ Cloud-Based Storage – Attendance data is securely stored in the cloud, ensuring reliability, backup, and easy access from any device.
+
+✅ User-Friendly Interface – The system offers a simple and intuitive UI, making it easy for students and administrators to manage attendance records.
+
+✅ Secure Logins – Management and student accounts are secured with authentication.
 
 ---
 
