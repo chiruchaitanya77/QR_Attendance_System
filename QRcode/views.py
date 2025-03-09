@@ -12,6 +12,8 @@ from google.oauth2 import service_account
 import google.oauth2.credentials
 from django.shortcuts import redirect, render
 import google_auth_oauthlib.flow
+import base64
+from google_auth_oauthlib.flow import Flow
 
 @csrf_exempt  # Disable CSRF for testing/development; remove this in production if not necessary
 def otp(request):
