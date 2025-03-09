@@ -366,8 +366,150 @@ def QRattendance(request):
                     return JsonResponse({'error': 'Invalid QR code format'}, status=400)
     return render(request, 'QRattendance.html')
 
+# # Path to your credentials.json
+# CREDENTIALS_PATH = os.path.join("credentials", "credentials.json")
+# SCOPES = ['https://www.googleapis.com/auth/drive',
+#           'https://www.googleapis.com/auth/documents',
+#           'https://www.googleapis.com/auth/spreadsheets'
+#          ]
+
+# # Specify the sheet to update
+# SPREADSHEET_ID = '1OECWblIzGxduK6Kjo8j5TtC55Fs89at-J5ui1UPq_mU'  # Replace with your Google Doc ID
+
+# # OAuth redirect URI
+# REDIRECT_URI = "http://localhost:8000/oauth2callback"  # Ensure this is the same URI you configured in Google Cloud Console
+
+# def google_auth(request):
+#     # Initialize the OAuth flow
+#     flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
+#         CREDENTIALS_PATH, scopes=SCOPES
+#     )
+#     flow.redirect_uri = REDIRECT_URI
+
+#     # Generate the authorization URL
+#     authorization_url, state = flow.authorization_url(
+#         access_type='offline',
+#         include_granted_scopes='true'
+#     )
+
+#     # Save the state in the session for validation after the callback
+#     request.session['state'] = state
+
+#     # Redirect to the Google OAuth consent page
+#     return redirect(authorization_url)
+
+# def oauth2callback(request):
+#     # Retrieve the state saved in the session
+#     state = request.session.get('state')
+
+#     # Recreate the OAuth flow to exchange the authorization code
+#     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+#         CREDENTIALS_PATH, scopes=SCOPES, state=state
+#     )
+#     flow.redirect_uri = REDIRECT_URI
+
+#     # Exchange the authorization code for credentials
+#     authorization_response = request.build_absolute_uri()
+#     flow.fetch_token(authorization_response=authorization_response)
+
+#     # Save credentials in the session
+#     credentials = flow.credentials
+#     request.session['credentials'] = {
+#         'token': credentials.token,
+#         'refresh_token': credentials.refresh_token,
+#         'token_uri': credentials.token_uri,
+#         'client_id': credentials.client_id,
+#         'client_secret': credentials.client_secret,
+#         'scopes': credentials.scopes
+#     }
+
+#     return redirect('QRattendance')  # Redirect to the update form after authentication
+
+# # Function to update a Google Sheets with user input (Main Changes)
+# def update_google_sheet(request, studentname, mobile, roll, classes, blood, college, date):
+#     if 'credentials' not in request.session:
+#         return redirect('google_auth')
+
+#     credentials = google.oauth2.credentials.Credentials(
+#         **request.session['credentials']
+#     )
+
+#     # Connect to Google Sheets API
+#     service = build('sheets', 'v4', credentials=credentials)
+
+#     # Specify the spreadsheet to update
+#     SPREADSHEET_ID = '1OECWblIzGxduK6Kjo8j5TtC55Fs89at-J5ui1UPq_mU'
+#     # Specify the range to append the data to
+#     RANGE = 'Sheet1!A:G'  # Ensure enough columns are specified for the data
+
+#     result = service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=RANGE).execute()
+#     existing_values = result.get('values', [])
+
+#     # Normalize new row
+#     new_row = [studentname.strip(), mobile.strip(), roll.strip(), classes.strip(), blood.strip(), college.strip(), date.strip()]
+
+#     # Check for duplicates in existing values
+#     if new_row in existing_values:
+#         return  # Exit without updating if the row is already present
+
+#     # Body of the request
+#     body = {
+#         'values': [new_row]
+#     }
+
+#     # Append the data to the sheet
+#     service.spreadsheets().values().append(
+#         spreadsheetId=SPREADSHEET_ID,
+#         range=RANGE,
+#         valueInputOption='RAW',
+#         insertDataOption='INSERT_ROWS',
+#         body=body
+#     ).execute()
+
+# SERVICE_PATH = os.path.join("credentials", "service-account.json")
+# def download_sheet(request):
+#     # Load credentials manually
+#     creds = service_account.Credentials.from_service_account_file(
+#         SERVICE_PATH, scopes=SCOPES
+#     )
+#     # Initialize Google Drive API service
+#     drive_service = build("drive", "v3", credentials=creds)
+
+#     # File ID (same as Spreadsheet ID)
+#     FILE_ID = "1OECWblIzGxduK6Kjo8j5TtC55Fs89at-J5ui1UPq_mU"
+
+#     try:
+#         # Export file as Excel (.xlsx)
+#         request = drive_service.files().export(
+#             fileId=FILE_ID,
+#             mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+#         )
+
+#         # Get file content
+#         file_content = request.execute()
+
+#         # Create HTTP response for file download
+#         response = HttpResponse(file_content,
+#                                 content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+#         response["Content-Disposition"] = 'attachment; filename="google_sheet.xlsx"'
+
+#         return response  # ✅ Now returning an HTTP Response!
+
+#     except Exception as e:
+#         return HttpResponse(f"Error: {str(e)}", status=500)
+
+
+
 # Path to your credentials.json
-CREDENTIALS_PATH = os.path.join("credentials", "credentials.json")
+# CREDENTIALS_PATH = os.path.join("credentials", "credentials.json")
+credentials_json = os.getenv('GOOGLE_CREDENTIALS')
+
+if not credentials_json:
+    raise ValueError("Google OAuth credentials not found in environment variables")
+
+    # Decode the base64 credentials
+credentials_data = json.loads(base64.b64decode(credentials_json).decode('utf-8'))
+
 SCOPES = ['https://www.googleapis.com/auth/drive',
           'https://www.googleapis.com/auth/documents',
           'https://www.googleapis.com/auth/spreadsheets'
@@ -380,10 +522,15 @@ SPREADSHEET_ID = '1OECWblIzGxduK6Kjo8j5TtC55Fs89at-J5ui1UPq_mU'  # Replace with 
 REDIRECT_URI = "http://localhost:8000/oauth2callback"  # Ensure this is the same URI you configured in Google Cloud Console
 
 def google_auth(request):
-    # Initialize the OAuth flow
-    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
-        CREDENTIALS_PATH, scopes=SCOPES
+    # Initialize OAuth flow
+    flow = google_auth_oauthlib.flow.Flow.from_client_config(
+        credentials_data, scopes=SCOPES
     )
+
+    # # Initialize the OAuth flow
+    # flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
+    #     CREDENTIALS_PATH, scopes=SCOPES
+    # )
     flow.redirect_uri = REDIRECT_URI
 
     # Generate the authorization URL
@@ -402,9 +549,12 @@ def oauth2callback(request):
     # Retrieve the state saved in the session
     state = request.session.get('state')
 
-    # Recreate the OAuth flow to exchange the authorization code
+    # # Recreate the OAuth flow to exchange the authorization code
+    # flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+    #     CREDENTIALS_PATH, scopes=SCOPES, state=state
+    # )
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        CREDENTIALS_PATH, scopes=SCOPES, state=state
+        credentials_data, scopes=SCOPES, state=state
     )
     flow.redirect_uri = REDIRECT_URI
 
@@ -497,5 +647,6 @@ def download_sheet(request):
 
     except Exception as e:
         return HttpResponse(f"Error: {str(e)}", status=500)
+
 
 
