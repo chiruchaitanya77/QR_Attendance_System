@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'DjangoProject.urls'
@@ -141,8 +142,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [ BASE_DIR / 'static']  # Make sure the static directory is correctly referenced
+STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'), # Make sure the static directory is correctly referenced
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Required for production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 MEDIA_URL = '/media/'
