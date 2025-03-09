@@ -555,7 +555,7 @@ def oauth2callback(request):
     # flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
     #     CREDENTIALS_PATH, scopes=SCOPES, state=state
     # )
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+    flow = google_auth_oauthlib.flow.Flow.from_client_config(
         credentials_data, scopes=SCOPES, state=state
     )
     flow.redirect_uri = REDIRECT_URI
