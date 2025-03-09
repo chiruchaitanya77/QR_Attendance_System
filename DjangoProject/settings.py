@@ -12,12 +12,16 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-
+import dj_database_url
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 X_FRAME_OPTIONS = 'ALLOWALL'
+ENV_PATH = BASE_DIR / "env/.env"  # Adjust this path if necessary
+load_dotenv(dotenv_path=ENV_PATH)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -26,8 +30,8 @@ X_FRAME_OPTIONS = 'ALLOWALL'
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
-
+# DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
@@ -86,8 +90,21 @@ WSGI_APPLICATION = 'DjangoProject.wsgi.application'
 #     }
 # }
 
-database_url = os.environ.get('DATABASE_URL')
-DATABASES['default'] = dj_database_url.parse(database_url)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+# If a database URL is provided (e.g., in deployment), override the default settings
+database_url = os.getenv("DATABASE_URL")  # Fetch from environment variables
+if database_url:
+    DATABASES['default'] = dj_database_url.parse(database_url)
+
+
+print("Database URL:", database_url)  # Debugging line (remove later)
+print("Secret Key:", SECRET_KEY)  # Debugging line (remove later)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -125,6 +142,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [ BASE_DIR / 'static']  # Make sure the static directory is correctly referenced
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Required for production
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
