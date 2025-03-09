@@ -616,12 +616,25 @@ def update_google_sheet(request, studentname, mobile, roll, classes, blood, coll
         body=body
     ).execute()
 
-SERVICE_PATH = os.path.join("credentials", "service-account.json")
+# SERVICE_PATH = os.path.join("credentials", "service-account.json")
+service_account_json = os.getenv('SERVICE_ACCOUNT')
 def download_sheet(request):
     # Load credentials manually
-    creds = service_account.Credentials.from_service_account_file(
-        SERVICE_PATH, scopes=SCOPES
+    # creds = service_account.Credentials.from_service_account_file(
+    #     SERVICE_PATH, scopes=SCOPES
+    # )
+
+    if not service_account_json:
+        return HttpResponse("Service account credentials not found in environment variables", status=500)
+
+        # Decode the base64 credentials
+    credentials_data = json.loads(base64.b64decode(service_account_json).decode('utf-8'))
+
+    # Authenticate using the decoded service account JSON
+    creds = service_account.Credentials.from_service_account_info(
+        credentials_data, scopes=SCOPES
     )
+
     # Initialize Google Drive API service
     drive_service = build("drive", "v3", credentials=creds)
 
@@ -647,6 +660,5 @@ def download_sheet(request):
 
     except Exception as e:
         return HttpResponse(f"Error: {str(e)}", status=500)
-
 
 
