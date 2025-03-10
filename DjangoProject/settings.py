@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-X_FRAME_OPTIONS = 'ALLOWALL'
+# X_FRAME_OPTIONS = 'ALLOWALL'
 ENV_PATH = BASE_DIR / "env/.env"  # Adjust this path if necessary
 load_dotenv(dotenv_path=ENV_PATH)
 
@@ -31,8 +31,16 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
-DEBUG = True
+DEBUG = os.environ.get('DEBUG').lower() == 'true'
 ALLOWED_HOSTS = ['*']
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 
 # Application definition
@@ -104,8 +112,8 @@ if database_url:
     DATABASES['default'] = dj_database_url.parse(database_url)
 
 
-print("Database URL:", database_url)  # Debugging line (remove later)
-print("Secret Key:", SECRET_KEY)  # Debugging line (remove later)
+# print("Database URL:", database_url)  # Debugging line (remove later)
+# print("Secret Key:", SECRET_KEY)  # Debugging line (remove later)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
