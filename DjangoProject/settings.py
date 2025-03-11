@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-# X_FRAME_OPTIONS = 'ALLOWALL'
+X_FRAME_OPTIONS = 'ALLOWALL'
 ENV_PATH = BASE_DIR / "env/.env"  # Adjust this path if necessary
 load_dotenv(dotenv_path=ENV_PATH)
 
