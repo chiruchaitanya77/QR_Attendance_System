@@ -521,7 +521,7 @@ SCOPES = ['https://www.googleapis.com/auth/drive',
 SPREADSHEET_ID = '1OECWblIzGxduK6Kjo8j5TtC55Fs89at-J5ui1UPq_mU'  # Replace with your Google Doc ID
 
 # OAuth redirect URI
-REDIRECT_URI = "http://localhost:8000/oauth2callback"  # Ensure this is the same URI you configured in Google Cloud Console
+REDIRECT_URI = "https://qr-attendance-system-19l7.onrender.com/oauth2callback"  # Ensure this is the same URI you configured in Google Cloud Console
 
 def google_auth(request):
     # Initialize OAuth flow
